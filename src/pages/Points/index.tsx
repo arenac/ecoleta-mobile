@@ -1,16 +1,48 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  StatusBar,
+  TouchableOpacity,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useNavigation} from '@react-navigation/native';
+import MapView from 'react-native-maps';
+
+const Points: React.FC = () => {
+  const navigate = useNavigation();
+
+  function handleNavigateBack() {
+    navigate.navigate('Home');
+  }
+
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity onPress={handleNavigateBack}>
+        <Icon name="navigate-before" size={25} color="#34cb29" />
+      </TouchableOpacity>
+
+      <Text style={styles.title}>Welcome</Text>
+      <Text style={styles.description}>Find a collect point in the map.</Text>
+
+      <View style={styles.mapContainer}>
+        <MapView style={styles.map} />
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 32,
-    paddingTop: 20 + Constants.statusBarHeight,
+    paddingTop: 20 + (StatusBar.currentHeight ? StatusBar.currentHeight : 0),
   },
 
   title: {
     fontSize: 20,
-    fontFamily: 'Ubuntu_700Bold',
+    fontFamily: 'Ubuntu-Bold',
     marginTop: 24,
   },
 
@@ -18,7 +50,7 @@ const styles = StyleSheet.create({
     color: '#6C6C80',
     fontSize: 16,
     marginTop: 4,
-    fontFamily: 'Roboto_400Regular',
+    fontFamily: 'Roboto-Regular',
   },
 
   mapContainer: {
@@ -97,13 +129,5 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
 });
-
-const Points: React.FC = () => {
-  return (
-    <View>
-      <Text>Points</Text>
-    </View>
-  );
-};
 
 export default Points;
