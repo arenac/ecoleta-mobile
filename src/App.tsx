@@ -3,7 +3,7 @@ import React from 'react';
 import {StatusBar} from 'react-native';
 declare const global: {HermesInternal: null | {}};
 
-import Home from './pages/Home';
+import Routes from './routes';
 
 const App = () => {
   return (
@@ -13,7 +13,7 @@ const App = () => {
         backgroundColor="transparent"
         translucent
       />
-      <Home />
+      <Routes />
     </>
   );
 };

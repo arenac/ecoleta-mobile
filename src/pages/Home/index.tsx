@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, View, ImageBackground, Text, Image} from 'react-native';
 import {RectButton} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useNavigation} from '@react-navigation/native';
 
 // @ts-ignore
 import logo from '../../assets/logo.png';
@@ -9,6 +10,12 @@ import logo from '../../assets/logo.png';
 import background from '../../assets/home-background.png';
 
 const Home: React.FC = () => {
+  const navigation = useNavigation();
+
+  function handleNavigationToPoints() {
+    navigation.navigate('Points');
+  }
+
   return (
     <ImageBackground
       source={background}
@@ -23,7 +30,7 @@ const Home: React.FC = () => {
       </View>
 
       <View style={styles.footer}>
-        <RectButton style={styles.button} onPress={() => {}}>
+        <RectButton style={styles.button} onPress={handleNavigationToPoints}>
           <View style={styles.buttonIcon}>
             <Icon name="navigate-next" size={20} color="#fff" />
           </View>
@@ -38,7 +45,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 32,
-    backgroundColor: '#f0f0f5',
   },
 
   main: {
