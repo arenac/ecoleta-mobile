@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
 
   mapMarkerTitle: {
     flex: 1,
-    fontFamily: 'Roboto_400Regular',
+    fontFamily: 'Roboto-Regular',
     color: '#FFF',
     fontSize: 13,
     lineHeight: 23,

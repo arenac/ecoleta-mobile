@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#322153',
     fontSize: 32,
-    fontFamily: 'Ubuntu_700Bold',
+    fontFamily: 'Ubuntu-Bold',
     maxWidth: 260,
     marginTop: 64,
   },
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     color: '#6C6C80',
     fontSize: 16,
     marginTop: 16,
-    fontFamily: 'Roboto_400Regular',
+    fontFamily: 'Roboto-Regular',
     maxWidth: 260,
     lineHeight: 24,
   },
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'center',
     color: '#FFF',
-    fontFamily: 'Roboto_500Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 16,
   },
 });
