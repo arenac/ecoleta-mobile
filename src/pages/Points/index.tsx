@@ -5,10 +5,12 @@ import {
   Text,
   StatusBar,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
-import MapView from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
+import {SvgUri} from 'react-native-svg';
 
 const Points: React.FC = () => {
   const navigate = useNavigation();
@@ -18,18 +20,91 @@ const Points: React.FC = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={handleNavigateBack}>
-        <Icon name="navigate-before" size={25} color="#34cb29" />
-      </TouchableOpacity>
+    <>
+      <View style={styles.container}>
+        <TouchableOpacity onPress={handleNavigateBack}>
+          <Icon name="navigate-before" size={25} color="#34cb29" />
+        </TouchableOpacity>
 
-      <Text style={styles.title}>Welcome</Text>
-      <Text style={styles.description}>Find a collect point in the map.</Text>
+        <Text style={styles.title}>Welcome</Text>
+        <Text style={styles.description}>Find a collect point in the map.</Text>
 
-      <View style={styles.mapContainer}>
-        <MapView style={styles.map} />
+        <View style={styles.mapContainer}>
+          <MapView
+            style={styles.map}
+            initialRegion={{
+              latitude: 59.189274,
+              longitude: 17.619522,
+              longitudeDelta: 0.014,
+              latitudeDelta: 0.014,
+            }}>
+            {/*
+              TODO: 1:13 */}
+            <Marker
+              coordinate={{
+                latitude: 59.189274,
+                longitude: 17.619522,
+              }}
+            />
+          </MapView>
+        </View>
       </View>
-    </View>
+      <View style={styles.itemsContainer}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{paddingHorizontal: 20}}>
+          <TouchableOpacity style={styles.item} onPress={() => {}}>
+            <SvgUri
+              width={42}
+              height={42}
+              uri="http://192.168.1.241:3333/uploads/lamp.svg"
+            />
+            <Text style={styles.itemTitle}>Lamps</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.item} onPress={() => {}}>
+            <SvgUri
+              width={42}
+              height={42}
+              uri="http://192.168.1.241:3333/uploads/lamp.svg"
+            />
+            <Text style={styles.itemTitle}>Lamps</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.item} onPress={() => {}}>
+            <SvgUri
+              width={42}
+              height={42}
+              uri="http://192.168.1.241:3333/uploads/lamp.svg"
+            />
+            <Text style={styles.itemTitle}>Lamps</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.item} onPress={() => {}}>
+            <SvgUri
+              width={42}
+              height={42}
+              uri="http://192.168.1.241:3333/uploads/lamp.svg"
+            />
+            <Text style={styles.itemTitle}>Lamps</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.item} onPress={() => {}}>
+            <SvgUri
+              width={42}
+              height={42}
+              uri="http://192.168.1.241:3333/uploads/lamp.svg"
+            />
+            <Text style={styles.itemTitle}>Lamps</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.item} onPress={() => {}}>
+            <SvgUri
+              width={42}
+              height={42}
+              uri="http://192.168.1.241:3333/uploads/lamp.svg"
+            />
+            <Text style={styles.itemTitle}>Lamps</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    </>
   );
 };
 
