@@ -22,8 +22,9 @@ interface Item {
 }
 
 const Points: React.FC = () => {
-  const navigate = useNavigation();
   const [items, setItems] = useState<Item[]>([]);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const navigate = useNavigation();
 
   useEffect(() => {
     api.get('items').then((response) => {
@@ -37,6 +38,16 @@ const Points: React.FC = () => {
 
   function handleNavigateToDetail() {
     navigate.navigate('Detail');
+  }
+
+  function handleSelectItem(id: number) {
+    const alreadySelected = selectedItems.findIndex((itemId) => itemId === id);
+    if (alreadySelected >= 0) {
+      const filteredItems = selectedItems.filter((itemId) => itemId !== id);
+      setSelectedItems(filteredItems);
+    } else {
+      setSelectedItems([...selectedItems, id]);
+    }
   }
 
   return (
@@ -89,8 +100,12 @@ const Points: React.FC = () => {
           {items.map((item) => (
             <TouchableOpacity
               key={item.id}
-              style={styles.item}
-              onPress={() => {}}>
+              style={[
+                styles.item,
+                selectedItems.includes(item.id) ? styles.selectedItem : {},
+              ]}
+              onPress={() => handleSelectItem(item.id)}
+              activeOpacity={0.6}>
               <SvgUri width={42} height={42} uri={item.image_url} />
               <Text style={styles.itemTitle}>{item.title}</Text>
             </TouchableOpacity>
