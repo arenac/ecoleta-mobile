@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 import MapView, {Marker} from 'react-native-maps';
 import {SvgUri} from 'react-native-svg';
+import Geolocation from '@react-native-community/geolocation';
 
 import api from '../../services/api';
 
@@ -21,10 +22,30 @@ interface Item {
   image_url: string;
 }
 
+interface Coordinate {
+  latitude: number;
+  longitude: number;
+}
+
 const Points: React.FC = () => {
+  const [initialPosiion, setInitialPosition] = useState<Coordinate>({
+    latitude: 0,
+    longitude: 0,
+  });
+  const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<Item[]>([]);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const navigate = useNavigation();
+
+  useEffect(() => {
+    async function loadInitialPosition() {
+      Geolocation.getCurrentPosition(({coords}) => {
+        setInitialPosition(coords);
+        setLoading(false);
+      });
+    }
+    loadInitialPosition();
+  }, []);
 
   useEffect(() => {
     api.get('items').then((response) => {
@@ -63,14 +84,15 @@ const Points: React.FC = () => {
         <View style={styles.mapContainer}>
           <MapView
             style={styles.map}
+            loadingEnabled={loading}
             initialRegion={{
-              latitude: 59.189274,
-              longitude: 17.619522,
+              latitude: initialPosiion.latitude,
+              longitude: initialPosiion.longitude,
               longitudeDelta: 0.014,
               latitudeDelta: 0.014,
             }}>
             {/*
-              TODO: 1:13 */}
+              TODO: 1:38 */}
             <Marker
               style={styles.mapMarker}
               onPress={handleNavigateToDetail}
