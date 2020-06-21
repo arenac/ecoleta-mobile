@@ -8,7 +8,7 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 import MapView, {Marker} from 'react-native-maps';
 import {SvgUri} from 'react-native-svg';
@@ -28,7 +28,7 @@ const Points: React.FC = () => {
     <>
       <View style={styles.container}>
         <TouchableOpacity onPress={handleNavigateBack}>
-          <Icon name="navigate-before" size={25} color="#34cb29" />
+          <Icon name="angle-left" size={25} color="#34cb29" />
         </TouchableOpacity>
 
         <Text style={styles.title}>Welcome</Text>

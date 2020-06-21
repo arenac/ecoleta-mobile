@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, ImageBackground, Text, Image} from 'react-native';
 import {RectButton} from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 
 // @ts-ignore
@@ -32,7 +32,7 @@ const Home: React.FC = () => {
       <View style={styles.footer}>
         <RectButton style={styles.button} onPress={handleNavigationToPoints}>
           <View style={styles.buttonIcon}>
-            <Icon name="navigate-next" size={25} color="#fff" />
+            <Icon name="angle-right" size={25} color="#fff" />
           </View>
           <Text style={styles.buttonText}>Enter</Text>
         </RectButton>
