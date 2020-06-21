@@ -6,6 +6,7 @@ import {
   StatusBar,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
@@ -16,7 +17,11 @@ const Points: React.FC = () => {
   const navigate = useNavigation();
 
   function handleNavigateBack() {
-    navigate.navigate('Home');
+    navigate.goBack();
+  }
+
+  function handleNavigateToDetail() {
+    navigate.navigate('Detail');
   }
 
   return (
@@ -41,11 +46,23 @@ const Points: React.FC = () => {
             {/*
               TODO: 1:13 */}
             <Marker
+              style={styles.mapMarker}
+              onPress={handleNavigateToDetail}
               coordinate={{
                 latitude: 59.189274,
                 longitude: 17.619522,
-              }}
-            />
+              }}>
+              <View style={styles.mapMarkerContainer}>
+                <Image
+                  style={styles.mapMarkerImage}
+                  source={{
+                    uri:
+                      'https://ak.picdn.net/shutterstock/videos/20502442/thumb/5.jpg',
+                  }}
+                />
+                <Text style={styles.mapMarkerTitle}>Recycler</Text>
+              </View>
+            </Marker>
           </MapView>
         </View>
       </View>
