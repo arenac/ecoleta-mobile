@@ -8,6 +8,7 @@ import {
   ScrollView,
   Image,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
@@ -30,7 +31,7 @@ interface Coordinate {
 }
 
 const Points: React.FC = () => {
-  const [initialPosiion, setInitialPosition] = useState<Coordinate>({
+  const [coordinates, setCoordinates] = useState<Coordinate>({
     latitude: 0,
     longitude: 0,
   });
@@ -48,9 +49,9 @@ const Points: React.FC = () => {
         Alert.prompt('Error while retrieving the coordinates');
       }
 
-      if (coords && initialPosiion.latitude === 0) {
+      if (coords && coordinates.latitude === 0) {
         const {latitude, longitude} = JSON.parse(coords);
-        setInitialPosition({
+        setCoordinates({
           latitude: Number(latitude),
           longitude: Number(longitude),
         });
@@ -62,7 +63,7 @@ const Points: React.FC = () => {
       try {
         await AsyncStorage.setItem(
           '@ecoleta/coords',
-          JSON.stringify(initialPosiion),
+          JSON.stringify(coordinates),
         );
       } catch (err) {
         Alert.prompt('Error while saving the coordinates');
@@ -73,12 +74,12 @@ const Points: React.FC = () => {
       saveCoords();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialPosiion]);
+  }, [coordinates]);
 
   useEffect(() => {
     async function loadInitialPosition() {
       Geolocation.getCurrentPosition(({coords}) => {
-        setInitialPosition(coords);
+        setCoordinates(coords);
         setLoading(false);
       });
     }
@@ -109,6 +110,10 @@ const Points: React.FC = () => {
     }
   }
 
+  function handleRegionChange(region: Coordinate) {
+    setCoordinates(region);
+  }
+
   return (
     <>
       <View style={styles.container}>
@@ -120,36 +125,40 @@ const Points: React.FC = () => {
         <Text style={styles.description}>Find a collect point in the map.</Text>
 
         <View style={styles.mapContainer}>
-          <MapView
-            style={styles.map}
-            loadingEnabled={loading}
-            initialRegion={{
-              latitude: initialPosiion.latitude,
-              longitude: initialPosiion.longitude,
-              longitudeDelta: 0.014,
-              latitudeDelta: 0.014,
-            }}>
-            {/*
+          {loading ? (
+            <ActivityIndicator size="large" />
+          ) : (
+            <MapView
+              style={styles.map}
+              initialRegion={{
+                latitude: coordinates.latitude,
+                longitude: coordinates.longitude,
+                longitudeDelta: 0.014,
+                latitudeDelta: 0.014,
+              }}
+              onRegionChangeComplete={handleRegionChange}>
+              {/*
               TODO: 1:38 */}
-            <Marker
-              style={styles.mapMarker}
-              onPress={handleNavigateToDetail}
-              coordinate={{
-                latitude: 59.189274,
-                longitude: 17.619522,
-              }}>
-              <View style={styles.mapMarkerContainer}>
-                <Image
-                  style={styles.mapMarkerImage}
-                  source={{
-                    uri:
-                      'https://ak.picdn.net/shutterstock/videos/20502442/thumb/5.jpg',
-                  }}
-                />
-                <Text style={styles.mapMarkerTitle}>Recycler</Text>
-              </View>
-            </Marker>
-          </MapView>
+              <Marker
+                style={styles.mapMarker}
+                onPress={handleNavigateToDetail}
+                coordinate={{
+                  latitude: 59.189274,
+                  longitude: 17.619522,
+                }}>
+                <View style={styles.mapMarkerContainer}>
+                  <Image
+                    style={styles.mapMarkerImage}
+                    source={{
+                      uri:
+                        'https://ak.picdn.net/shutterstock/videos/20502442/thumb/5.jpg',
+                    }}
+                  />
+                  <Text style={styles.mapMarkerTitle}>Recycler</Text>
+                </View>
+              </Marker>
+            </MapView>
+          )}
         </View>
       </View>
       <View style={styles.itemsContainer}>
