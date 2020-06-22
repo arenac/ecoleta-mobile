@@ -7,12 +7,14 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 import MapView, {Marker} from 'react-native-maps';
 import {SvgUri} from 'react-native-svg';
 import Geolocation from '@react-native-community/geolocation';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import api from '../../services/api';
 
@@ -36,6 +38,42 @@ const Points: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const navigate = useNavigation();
+
+  useEffect(() => {
+    async function retrieveCoords() {
+      let coords: {latitude: string; longitude: string} | null;
+      try {
+        coords = await AsyncStorage.getItem('@ecoleta/coords');
+      } catch (err) {
+        Alert.prompt('Error while retrieving the coordinates');
+      }
+
+      if (coords && initialPosiion.latitude === 0) {
+        const {latitude, longitude} = JSON.parse(coords);
+        setInitialPosition({
+          latitude: Number(latitude),
+          longitude: Number(longitude),
+        });
+      }
+    }
+    retrieveCoords();
+
+    async function saveCoords() {
+      try {
+        await AsyncStorage.setItem(
+          '@ecoleta/coords',
+          JSON.stringify(initialPosiion),
+        );
+      } catch (err) {
+        Alert.prompt('Error while saving the coordinates');
+      }
+    }
+
+    return () => {
+      saveCoords();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialPosiion]);
 
   useEffect(() => {
     async function loadInitialPosition() {
