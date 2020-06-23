@@ -30,6 +30,14 @@ interface Coordinate {
   longitude: number;
 }
 
+interface Point {
+  id: number;
+  image: string;
+  name: string;
+  longitude: number;
+  latitude: number;
+}
+
 const Points: React.FC = () => {
   const [coordinates, setCoordinates] = useState<Coordinate>({
     latitude: 0,
@@ -37,6 +45,7 @@ const Points: React.FC = () => {
   });
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<Item[]>([]);
+  const [points, setPoints] = useState<Point[]>([]);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const navigate = useNavigation();
 
@@ -92,12 +101,26 @@ const Points: React.FC = () => {
     });
   }, []);
 
+  useEffect(() => {
+    api
+      .get('points', {
+        params: {
+          city: 'Södertälje',
+          state: 'ST',
+          items: [1, 2, 3, 4, 5, 6],
+        },
+      })
+      .then((response) => {
+        setPoints(response.data);
+      });
+  }, []);
+
   function handleNavigateBack() {
     navigate.goBack();
   }
 
-  function handleNavigateToDetail() {
-    navigate.navigate('Detail');
+  function handleNavigateToDetail(id: number) {
+    navigate.navigate('Detail', {point_id: id});
   }
 
   function handleSelectItem(id: number) {
@@ -137,26 +160,26 @@ const Points: React.FC = () => {
                 latitudeDelta: 0.014,
               }}
               onRegionChangeComplete={handleRegionChange}>
-              {/*
-              TODO: 1:38 */}
-              <Marker
-                style={styles.mapMarker}
-                onPress={handleNavigateToDetail}
-                coordinate={{
-                  latitude: 59.189274,
-                  longitude: 17.619522,
-                }}>
-                <View style={styles.mapMarkerContainer}>
-                  <Image
-                    style={styles.mapMarkerImage}
-                    source={{
-                      uri:
-                        'https://ak.picdn.net/shutterstock/videos/20502442/thumb/5.jpg',
-                    }}
-                  />
-                  <Text style={styles.mapMarkerTitle}>Recycler</Text>
-                </View>
-              </Marker>
+              {points.map((point) => (
+                <Marker
+                  key={point.id}
+                  style={styles.mapMarker}
+                  onPress={() => handleNavigateToDetail(point.id)}
+                  coordinate={{
+                    latitude: point.latitude,
+                    longitude: point.longitude,
+                  }}>
+                  <View style={styles.mapMarkerContainer}>
+                    <Image
+                      style={styles.mapMarkerImage}
+                      source={{
+                        uri: point.image,
+                      }}
+                    />
+                    <Text style={styles.mapMarkerTitle}>{point.name}</Text>
+                  </View>
+                </Marker>
+              ))}
             </MapView>
           )}
         </View>
@@ -188,7 +211,7 @@ const Points: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 32,
+    paddingHorizontal: 20,
     paddingTop: 20 + (StatusBar.currentHeight ? StatusBar.currentHeight : 0),
   },
 
@@ -257,8 +280,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderWidth: 2,
     borderColor: '#eee',
-    height: 120,
-    width: 120,
+    height: 100,
+    width: 100,
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingTop: 20,
@@ -279,6 +302,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto_400Regular',
     textAlign: 'center',
     fontSize: 13,
+    paddingTop: 5,
   },
 });
 
