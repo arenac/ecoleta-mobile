@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   StatusBar,
@@ -9,15 +9,49 @@ import {
   SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {RectButton} from 'react-native-gesture-handler';
+
+import api from '../../services/api';
+
+interface Params {
+  point_id: number;
+}
+
+interface Data {
+  point: {
+    image: string;
+    name: string;
+    email: string;
+    whatsapp: string;
+    city: string;
+    state: string;
+  };
+  items: {
+    title: string;
+  }[];
+}
 
 const Detail: React.FC = () => {
   const navigate = useNavigation();
+  const route = useRoute();
+  const [data, setData] = useState<Data>();
+
+  const routeParams = route.params as Params;
+
+  useEffect(() => {
+    api.get(`points/${routeParams.point_id}`).then((response) => {
+      setData(response.data);
+    });
+  }, [routeParams]);
 
   function handleNavigateBack() {
     navigate.goBack();
   }
+
+  /**
+   * TODO: 1:55
+   */
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -29,16 +63,19 @@ const Detail: React.FC = () => {
         <Image
           style={styles.pointImage}
           source={{
-            uri:
-              'https://ak.picdn.net/shutterstock/videos/20502442/thumb/5.jpg',
+            uri: data?.point.image,
           }}
         />
-        <Text style={styles.pointName}>Recycler Södertälje</Text>
-        <Text style={styles.pointItems}>Glas, metal, 🚨 , 📎 , 🔋 </Text>
+        <Text style={styles.pointName}>{data?.point.name}</Text>
+        <Text style={styles.pointItems}>
+          {data?.items.map((item) => item.title).join(', ')}
+        </Text>
 
         <View style={styles.address}>
           <Text style={styles.addressTitle}>Address</Text>
-          <Text style={styles.addressContent}>Address contend</Text>
+          <Text style={styles.addressContent}>
+            {data?.point.city}, {data?.point.state}
+          </Text>
         </View>
       </View>
       <View style={styles.footer}>
