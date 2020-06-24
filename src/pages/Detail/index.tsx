@@ -7,10 +7,12 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
+  Linking,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {RectButton} from 'react-native-gesture-handler';
+import email from 'react-native-email';
 
 import api from '../../services/api';
 
@@ -53,6 +55,19 @@ const Detail: React.FC = () => {
    * TODO: 1:55
    */
 
+  function sendMail() {
+    email([`${data?.point.email}`], {
+      subject: 'Collect recycle material',
+      body: 'Hello, I am want to collect recycle material',
+    }).catch(console.error);
+  }
+
+  function sendWhatsApp() {
+    Linking.openURL(
+      `whatsapp://send?phone=${data?.point.whatsapp}&text=Hello, I am want to collect recycle material`,
+    );
+  }
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
@@ -79,12 +94,12 @@ const Detail: React.FC = () => {
         </View>
       </View>
       <View style={styles.footer}>
-        <RectButton style={styles.button} onPress={() => {}}>
+        <RectButton style={styles.button} onPress={sendWhatsApp}>
           <Icon name="whatsapp" size={25} color="#fff" />
           <Text style={styles.buttonText}>Whatsapp</Text>
         </RectButton>
 
-        <RectButton style={styles.button} onPress={() => {}}>
+        <RectButton style={styles.button} onPress={sendMail}>
           <Icon name="envelope" size={25} color="#fff" />
           <Text style={styles.buttonText}>E-mail</Text>
         </RectButton>
